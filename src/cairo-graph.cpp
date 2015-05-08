@@ -4,9 +4,9 @@
 #include "graph.h"
 #include "parser.h"
 
-int main() {
+int main(int argc, char *argv[]) {
     Parser parser;
-    parser.read("test/dataset01.dat");
+    parser.read(argv[1]);
 
     Graph graph(100, 100);
     graph.set_data(parser.get_dataset());
