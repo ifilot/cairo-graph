@@ -135,11 +135,21 @@ void Graph::find_dimensions() {
  * Write the graph to the file
  */
 void Graph::plot(const std::string &_filename) {
+    // background and grid
     this->plot_grid();
-    this->plot_graph_border();
-    this->plot_lines();
-    //this->plot_points();
+
+    // functions depending on properties
+    if(this->properties.test(GRAPH_HAS_LINES)) {
+        this->plot_lines();
+    }
+    if(this->properties.test(GRAPH_HAS_POINTS)) {
+        this->plot_points();
+    }
+
+    // other stuff
     this->plot_ticks();
+    this->plot_graph_border();
+
     this->plt->write(_filename.c_str());
 }
 
@@ -268,4 +278,11 @@ void Graph::plot_lines() {
 
         this->plt->draw_line(x1, y1, x2, y2, Color(0,0,0), 1.0);
     }
+}
+
+/*
+ * Set properties
+ */
+void Graph::set_property(unsigned int property, bool value) {
+    this->properties[property] = value;
 }

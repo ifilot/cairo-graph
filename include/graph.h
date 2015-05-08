@@ -27,12 +27,17 @@
 #include <utility>
 #include <string>
 #include <stdio.h>
+#include <bitset>
 
 #include "plotter.h"
 #include "lexical_casts.h"
 
 // create special type
 typedef std::vector<std::pair<double, double> > DATACON;
+
+// define properties
+#define GRAPH_HAS_LINES   0 << 0 // 0
+#define GRAPH_HAS_POINTS  1 << 0 // 1
 
 class Graph {
 private:
@@ -60,10 +65,13 @@ private:
     unsigned int gridlines;
     Plotter *plt;
     const DATACON *data;
+    std::bitset<2> properties;
+
 public:
     Graph(const unsigned int &_ix, const unsigned int &_iy);
     void set_data(const DATACON *_data);
     void plot(const std::string &_filename);
+    void set_property(unsigned int property, bool value);
 
 private:
     void find_min();

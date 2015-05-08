@@ -39,10 +39,20 @@ int main(int argc, char *argv[]) {
         //**************************************
         // declare values to be parsed
         //**************************************
-        TCLAP::ValueArg<std::string> arg_output_filename("o","filename","Filename to print to",true,"test.png","filename");
-        cmd.add(arg_output_filename);
+
+        // input file
         TCLAP::ValueArg<std::string> arg_input_filename("i","input","Input file (i.e. CHGCAR)",false,"__NONE__","filename");
         cmd.add(arg_input_filename);
+
+        // output file (name of the .png file)
+        TCLAP::ValueArg<std::string> arg_output_filename("o","filename","Filename to print to",true,"test.png","filename");
+        cmd.add(arg_output_filename);
+
+        // whether to plot lines (default true)
+        TCLAP::SwitchArg arg_has_lines("l","lines","plot lines in the graph", cmd, false);
+
+        // whether to plot points (default false)
+        TCLAP::SwitchArg arg_has_points("p","points","plot points in the graph", cmd, false);
 
         cmd.parse(argc, argv);
 
@@ -51,6 +61,8 @@ int main(int argc, char *argv[]) {
         //**************************************
         std::string input_filename = arg_input_filename.getValue();
         std::string output_filename = arg_output_filename.getValue();
+        bool has_lines = arg_has_lines.getValue();
+        bool has_points = arg_has_points.getValue();
 
         //**************************************
         // start running the program
@@ -69,7 +81,17 @@ int main(int argc, char *argv[]) {
             parser.get_dataset_from_file(input_filename);
         }
 
+        // construct graph
         Graph graph(100, 100);
+
+        // parse instructions to graph
+        if(!has_lines && !has_points) { // bare minimum is showing lines
+            has_lines = true;
+        }
+        graph.set_property(GRAPH_HAS_LINES, has_lines);
+        graph.set_property(GRAPH_HAS_POINTS, has_points);
+
+        // read data and create graph
         graph.set_data(parser.get_dataset());
         graph.plot(output_filename);
 
