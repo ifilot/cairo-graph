@@ -1,5 +1,5 @@
 /**************************************************************************
- *   graph.h                                                              *
+ *   minigraph.cpp                                                        *
  *                                                                        *
  *   AUTHOR:  Ivo Filot <ivo@ivofilot.nl>                                 *
  *   PROJECT: MINIGRAPH                                                   *
@@ -20,60 +20,45 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef _GRAPH_H
-#define _GRAPH_H
-
+#include <iostream>
 #include <vector>
 #include <utility>
-#include <string>
+#include <sys/types.h>
+#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "graph.h"
+#include "parser.h"
 
-#include "plotter.h"
-#include "lexical_casts.h"
+void read_from_pipe (int file) {
+    FILE *stream;
+    int c;
+    stream = fdopen(file, "r");
+    while ((c = fgetc(stream)) != EOF) {
+        putchar (c);
+    }
+    fclose(stream);
+}
 
-// create special type
-typedef std::vector<std::pair<double, double> > DATACON;
+int main(int argc, char *argv[]) {
+    std::string input, output_file;
+    Parser parser;
 
-class Graph {
-private:
-    double xmin;
-    double ymin;
-    double xmax;
-    double ymax;
-    double dx;
-    double dy;
+    if(argc == 2) { // read from cin
+        std::string line;
+        while(std::getline(std::cin, line)) {
+            input.append(line).append("\n");
+        }
+        parser.get_dataset_from_string(input);
+        output_file = argv[1];
+    } else { // read from file
+        parser.get_dataset_from_file(argv[1]);
+        output_file = argv[2];
+    }
 
-    // image / graph properties
-    unsigned int ix;
-    unsigned int iy;
-    unsigned int bx;
-    unsigned int by;
-    unsigned int bxr;
-    unsigned int byu;
+    Graph graph(100, 100);
+    graph.set_data(parser.get_dataset());
+    graph.plot(output_file);
 
-    double xgmin;
-    double ygmin;
-    double xgmax;
-    double ygmax;
-    double int_x;
-    double int_y;
-    unsigned int gridlines;
-    Plotter *plt;
-    const DATACON *data;
-public:
-    Graph(const unsigned int &_ix, const unsigned int &_iy);
-    void set_data(const DATACON *_data);
-    void plot(const std::string &_filename);
-
-private:
-    void find_min();
-    void find_max();
-    void find_dimensions();
-    void plot_points();
-    void plot_lines();
-    void plot_grid();
-    void plot_ticks();
-    void plot_graph_border();
-};
-
-#endif //_GRAPH_H
+    return 0;
+}

@@ -1,23 +1,22 @@
 /**************************************************************************
- *   lexical_cast.cpp                                                     *
+ *   lexical_casts.cpp                                                    *
  *                                                                        *
- *   MYOCASTOR                                                            *
+ *   AUTHOR:  Ivo Filot <ivo@ivofilot.nl>                                 *
+ *   PROJECT: MINIGRAPH                                                   *
  *                                                                        *
- *   Authors: Ivo Filot                                                   *
- *            Bart Zijlstra                                               *
- *            Robin Broos                                                 *
- *            Emiel Hensen                                                *
+ *   This program is free software; you can redistribute it and/or modify *
+ *   it under the terms of the GNU General Public License as published by *
+ *   the Free Software Foundation, version 2                              *
  *                                                                        *
- *   (C) Copyright 2015 Inorganic Materials Chemistry                     *
+ *   This program is distributed in the hope that it will be useful, but  *
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    *
+ *   General Public License for more details.                             *
  *                                                                        *
- *   This is a legal licensing agreement (Agreement) between              *
- *   You (an individual or single legal entity) and                       *
- *   Inorganic Materials Chemistry (IMC) governing the in-house use       *
- *   of the MYOCASTOR software product (Software).                        *
- *   By downloading, installing, or using Software, You agree to be bound *
- *   by the license terms as given on http://www.myocastor.nl/license.    *
- *                                                                        *
- *   Routines for converting non-string types to string                   *
+ *   You should have received a copy of the GNU General Public License    *
+ *   along with this program; if not, write to the Free Software          *
+ *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA            *
+ *   02110-1301, USA.                                                     *
  *                                                                        *
  **************************************************************************/
 

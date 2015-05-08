@@ -1,5 +1,27 @@
+#**************************************************************************
+# *   Makefile                                                             *
+# *                                                                        *
+# *   AUTHOR:  Ivo Filot <ivo@ivofilot.nl>                                 *
+# *   PROJECT: MINIGRAPH                                                   *
+# *                                                                        *
+# *   This program is free software; you can redistribute it and/or modify *
+# *   it under the terms of the GNU General Public License as published by *
+# *   the Free Software Foundation, version 2                              *
+# *                                                                        *
+# *   This program is distributed in the hope that it will be useful, but  *
+# *   WITHOUT ANY WARRANTY; without even the implied warranty of           *
+# *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    *
+# *   General Public License for more details.                             *
+# *                                                                        *
+# *   You should have received a copy of the GNU General Public License    *
+# *   along with this program; if not, write to the Free Software          *
+# *   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA            *
+# *   02110-1301, USA.                                                     *
+# *                                                                        *
+# **************************************************************************/
+
 # set compiler and compile options
-EXEC = cg
+EXEC = mg
 CXX = g++                                # use the GNU C++ compiler
 OPTS = -O3 -Wall -g -Wno-write-strings   # use some optimization, report all warnings and enable debugging
 CFLAGS = $(OPTS)                         # add compile flags
@@ -15,7 +37,7 @@ SRCDIR = ./src
 CFLAGS += -I$(INCDIR) -I$(INCDIR_LAMMPS) -I$(SRCDIR)
 
 # add here the source files for the compilation
-SOURCES = cairo-graph.cpp plotter.cpp graph.cpp lexical_casts.cpp parser.cpp
+SOURCES = minigraph.cpp plotter.cpp graph.cpp lexical_casts.cpp parser.cpp
 
 # create the obj variable by substituting the extension of the sources
 # and adding a path
