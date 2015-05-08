@@ -72,4 +72,4 @@ doc: tex/manual.tex
 	rm -v manual.aux manual.log manual.toc
 
 clean:
-	rm -vf $(BINDIR)/$(EXEC) $(OBJ)
+	rm -vf $(BINDIR)/$(EXEC) $(OBJ) *.png
