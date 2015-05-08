@@ -10,6 +10,11 @@ Graph::Graph(const unsigned int &_ix, const unsigned int &_iy) {
     this->gridlines = 10;
     this->plt = new Plotter(this->ix + this->bx + this->bxr,
                             this->iy + this->by + this->byu);
+
+    this->xmin = 5e8; // some large number
+    this->ymin = 5e8; // some large number
+    this->xmax = -5e8; // some small number
+    this->ymax = -5e8; // some small number
 }
 
 void Graph::set_data(const DATACON *_data) {
@@ -38,6 +43,26 @@ void Graph::find_dimensions() {
     double dx = this->xmax - this->xmin;
     double dy = this->ymax - this->ymin;
 
+    if(fabs(dx) < 1e-5) {
+        dx = this->xmax * 1.5;
+    }
+
+    if(fabs(dy) < 1e-5) {
+        dy = this->ymax * 1.5;
+    }
+
+    if(fabs(dx) < 1e-5) {
+        dx = 2.0;
+        this->xmin = -1.0;
+        this->xmax = 1.0;
+    }
+
+    if(fabs(dy) < 1e-5) {
+        dy = 2.0;
+        this->ymin = -1.0;
+        this->ymax = 1.0;
+    }
+
     float oomx = log10(dx);
     float oomy = log10(dy);
 
@@ -58,7 +83,7 @@ void Graph::plot(const std::string &_filename) {
     this->plot_grid();
     this->plot_graph_border();
     this->plot_lines();
-    this->plot_points();
+    //this->plot_points();
     this->plot_ticks();
     this->plt->write(_filename.c_str());
 }

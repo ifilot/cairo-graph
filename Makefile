@@ -33,5 +33,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 test: $(BINDIR)/$(EXEC)
 	$(BINDIR)/$(EXEC)
 
+doc: tex/manual.tex
+	pdflatex tex/manual.tex
+	pdflatex tex/manual.tex
+	mv manual.pdf doc/
+	rm -v manual.aux manual.log manual.toc
+
 clean:
 	rm -vf $(BINDIR)/$(EXEC) $(OBJ)

@@ -9,6 +9,7 @@
 #include "plotter.h"
 #include "lexical_casts.h"
 
+// create special type
 typedef std::vector<std::pair<double, double> > DATACON;
 
 class Graph {

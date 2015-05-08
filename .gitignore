@@ -29,3 +29,8 @@
 
 bin/*
 *.png
+
+manual.aux
+manual.pdf
+manual.doc
+manual.log
