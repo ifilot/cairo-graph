@@ -82,6 +82,11 @@ private:
     void plot_grid();
     void plot_ticks();
     void plot_graph_border();
+
+    float internal_to_image_x(float _x);
+    float internal_to_image_y(float _y);
+    void plot_line_internal_coordinates(float _x1, float _y1, float _x2, float _y2,
+                                        Color col, float lt);
 };
 
 #endif //_GRAPH_H

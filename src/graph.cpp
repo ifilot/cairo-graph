@@ -35,7 +35,7 @@ Graph::Graph(const unsigned int &_ix, const unsigned int &_iy) {
     this->by = 50;      // bottom margin
     this->bxr = 20;     // right margin
     this->byu = 20;     // top margin
-    this->gridlines = 10;       // number of gridlines
+    this->gridlines = 4;       // number of (sub-)gridlines
 
     // create plotter object
     this->plt = new Plotter(this->ix + this->bx + this->bxr,
@@ -158,29 +158,19 @@ void Graph::plot(const std::string &_filename) {
  * can be set using this->gridlines
  */
 void Graph::plot_grid() {
-    unsigned int _dx = (this->ix) / (this->gridlines * 2);
-    unsigned int _dy = (this->iy) / (this->gridlines * 2);
+    float _dx = (this->int_x) / (this->gridlines + 1);
+    float _dy = (this->int_y) / (this->gridlines + 1);
 
     // horizontal lines
-    for(unsigned int i=0; i<this->gridlines; i++) {
-        this->plt->draw_line(
-            this->bx,               // start x
-            this->byu + 2 * i * _dy, // start y
-            this->ix + this->bx,    // dx
-            this->byu + 2 * i * _dy,     // dy
-            Color(224,224,224),
-            0.5);           // color
+    for(float yy = this->ygmin; yy <= this->ygmax; yy += _dy) {
+        this->plot_line_internal_coordinates(this->xgmin, yy, this->xgmax, yy,
+                                             Color(244,244,244), 1.0);
     }
 
     // vertical lines
-    for(unsigned int i=0; i<this->gridlines; i++) {
-        this->plt->draw_line(
-            this->bx + 2 * i * _dx,
-            this->byu,
-            this->bx + 2 * i * _dx,
-            this->iy + this->byu,
-            Color(224,224,224),
-            0.5);
+    for(float xx = this->xgmin; xx <= this->xgmax; xx += _dx) {
+        this->plot_line_internal_coordinates(xx, this->ygmin, xx, this->ygmax,
+                                             Color(244,244,244), 1.0);
     }
 }
 
@@ -270,14 +260,28 @@ void Graph::plot_points() {
  */
 void Graph::plot_lines() {
     for(DATACON::const_iterator it = data->begin(); it != data->end() - 1; ++it) {
-        float x1 = this->bx + (it->first - this->xgmin) * this->dx;
-        float y1 = this->iy + this->byu - (it->second - this->ygmin) * this->dy;
-
-        float x2 = this->bx + ((it+1)->first - this->xgmin) * this->dx;
-        float y2 = this->iy + this->byu - ((it+1)->second - this->ygmin) * this->dy;
-
-        this->plt->draw_line(x1, y1, x2, y2, Color(0,0,0), 1.0);
+        this->plot_line_internal_coordinates(it->first, it->second,
+                                             (it+1)->first, (it+1)->second,
+                                              Color(0,0,0), 1.0);
     }
+}
+
+float Graph::internal_to_image_x(float _x) {
+    return this->bx + (_x - this->xgmin) * this->dx;
+}
+
+float Graph::internal_to_image_y(float _y) {
+    return this->iy + this->byu - (_y - this->ygmin) * this->dy;
+}
+
+void Graph::plot_line_internal_coordinates(float _x1, float _y1, float _x2, float _y2,
+                                           Color col, float lt) {
+    float x1 = this->internal_to_image_x(_x1);
+    float y1 = this->internal_to_image_y(_y1);
+    float x2 = this->internal_to_image_x(_x2);
+    float y2 = this->internal_to_image_y(_y2);
+
+    this->plt->draw_line(x1, y1, x2, y2, col, lt);
 }
 
 /*
