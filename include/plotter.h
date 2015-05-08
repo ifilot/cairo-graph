@@ -75,7 +75,7 @@ public:
                           const Color &_color);
   void draw_empty_circle(float cx, float cy, float radius,
                         const Color &_color, float line_width);
-  void type(float x, float y, float fontsize, const std::string &_text);
+  void type(float x, float y, float fontsize, float rotation, const std::string &_text);
 private:
 
 };

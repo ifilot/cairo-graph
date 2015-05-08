@@ -96,14 +96,16 @@ void Plotter::draw_empty_circle(float cx, float cy, float radius,
   cairo_stroke(this->cr);
 }
 
-void Plotter::type(float x, float y, float fontsize, const std::string &_text) {
+void Plotter::type(float x, float y, float fontsize, float rotation, const std::string &_text) {
   cairo_text_extents_t te;
-  cairo_select_font_face(this->cr, "cairo:monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_select_font_face(this->cr, "monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
   cairo_set_source_rgb (this->cr, 0.0, 0.0, 0.0);
   cairo_set_font_size(this->cr, fontsize);
   cairo_text_extents (this->cr, "a", &te);
   cairo_move_to(this->cr, x, y);
+  cairo_rotate(this->cr, rotation * M_PI / 180.);
   cairo_show_text (this->cr, _text.c_str());
+  cairo_rotate(this->cr, -rotation * M_PI / 180.); // rotate back
 }
 
 void Plotter::write(const char* filename) {

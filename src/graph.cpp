@@ -1,14 +1,13 @@
 #include "graph.h"
 
-Graph::Graph(const unsigned int &_ix, const unsigned int &_iy,
-             const unsigned int &_tgrid) {
+Graph::Graph(const unsigned int &_ix, const unsigned int &_iy) {
     this->ix = _ix;
     this->iy = _iy;
     this->bx = 50;
-    this->by = 20;
+    this->by = 40;
     this->bxr = 20;
     this->byu = 20;
-    this->tgrid = _tgrid;
+    this->gridlines = 10;
     this->plt = new Plotter(this->ix + this->bx + this->bxr,
                             this->iy + this->by + this->byu);
 }
@@ -17,8 +16,7 @@ void Graph::set_data(const DATACON &_data) {
     this->data = _data;
     this->find_min();
     this->find_max();
-    this->dx = (double)(this->ix) / (this->xmax - this->xmin);
-    this->dy = (double)(this->iy) / (this->ymax - this->ymin);
+    this->find_dimensions();
 }
 
 void Graph::find_min() {
@@ -35,6 +33,27 @@ void Graph::find_max() {
     }
 }
 
+void Graph::find_dimensions() {
+    // establish order of magnitude of 'tick' interval
+    double dx = this->xmax - this->xmin;
+    double dy = this->ymax - this->ymin;
+
+    float oomx = log10(dx);
+    float oomy = log10(dy);
+
+    this->int_x = pow(10.0f, floor(oomx));
+    this->int_y = pow(10.0f, floor(oomy));
+
+    this->xgmin = floor(this->xmin / this->int_x) * this->int_x;
+    this->xgmax = ceil(this->xmax / this->int_x) * this->int_x;
+
+    this->ygmin = floor(this->ymin / this->int_y) * this->int_y;
+    this->ygmax = ceil(this->ymax / this->int_y) * this->int_y;
+
+    this->dx = (double)(this->ix) / (this->xgmax - this->xgmin);
+    this->dy = (double)(this->iy) / (this->ygmax - this->ygmin);
+}
+
 void Graph::plot(const std::string &_filename) {
     this->plot_grid();
     this->plot_graph_border();
@@ -44,11 +63,11 @@ void Graph::plot(const std::string &_filename) {
 }
 
 void Graph::plot_grid() {
-    unsigned int _dx = (this->ix) / 10;
-    unsigned int _dy = (this->iy) / 10;
+    unsigned int _dx = (this->ix) / (this->gridlines * 2);
+    unsigned int _dy = (this->iy) / (this->gridlines * 2);
 
     // horizontal lines
-    for(unsigned int i=0; i<5; i++) {
+    for(unsigned int i=0; i<this->gridlines; i++) {
         this->plt->draw_line(
             this->bx,               // start x
             this->byu + 2 * i * _dy, // start y
@@ -59,7 +78,7 @@ void Graph::plot_grid() {
     }
 
     // vertical lines
-    for(unsigned int i=0; i<5; i++) {
+    for(unsigned int i=0; i<this->gridlines; i++) {
         this->plt->draw_line(
             this->bx + 2 * i * _dx,
             this->byu,
@@ -77,36 +96,35 @@ void Graph::plot_graph_border() {
         this->ix,               // dx
         this->iy,               // dy
         Color(0,0,0),           // color
-        1.0);                   // line width
+        0.5);                   // line width
 }
 
 void Graph::plot_ticks() {
-    unsigned int _dy = (this->iy) / ((this->tgrid -1) * 2.0);
-    unsigned int _dx = (this->ix) / ((this->tgrid - 1) * 2.0);
-    char buffer[10];
     const float fontsize = 10;
-    const char* format = "%0.1e";
+    const char* format = "%0.2f";
 
-    for(unsigned int i=0; i<this->tgrid; i++) {
-        float x = this->bx - 50.0;
-        float y = this->iy + this->byu - 2.0 * i * _dy + 2.5;
-        float value = this->ymin + (double)i * (this->ymax - this->ymin) / 5.0f;
-        this->plt->type(x, y, fontsize, float2str2(value, format));
+    // vertical axis ticks
+    for(float yy = this->ygmin; yy <= this->ygmax; yy += this->int_y) {
+        std::string text = float2str2(yy, format);
+        float x = this->bx - text.length() * 7;
+        float y = this->iy + this->byu - (yy - this->ygmin) * this->dy + 0.3 * fontsize;
+        this->plt->type(x, y, fontsize, 0, text);
     }
 
-    for(unsigned int i=0; i<this->tgrid; i++) {
-        float x = this->bx + 2.0 * i * _dx - 22;
-        float y = this->iy + this->byu + 15;
-        float value = this->xmin + (double)i * (this->xmax - this->xmin) / 5.0f;
-        this->plt->type(x, y, fontsize, float2str2(value, format));
+    // horizontal axis ticks
+    for(float xx = this->xgmin; xx <= this->xgmax; xx += this->int_x) {
+        std::string text = float2str2(xx, format);
+        float x = this->bx + (xx - this->xgmin) * this->dx - 5;
+        float y = this->iy + this->byu + 15 - 0.25 * text.length() * fontsize;
+        this->plt->type(x, y, fontsize, 90, text);
     }
 }
 
 void Graph::plot_points() {
     for(DATACON::iterator it = data.begin(); it != data.end(); ++it) {
         this->plt->draw_filled_circle(
-            this->bx + (it->first - this->xmin) * this->dx,     // cx
-            this->iy + this->byu - (it->second - this->ymin) * this->dy,    // cy
+            this->bx + (it->first - this->xgmin) * this->dx,     // cx
+            this->iy + this->byu - (it->second - this->ygmin) * this->dy,    // cy
             2,                                                  // radius
             Color(0,0,0));                                      //color
     }

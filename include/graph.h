@@ -24,18 +24,25 @@ private:
     unsigned int by;
     unsigned int bxr;
     unsigned int byu;
-    unsigned int tgrid;
+
+    double xgmin;
+    double ygmin;
+    double xgmax;
+    double ygmax;
+    double int_x;
+    double int_y;
+    unsigned int gridlines;
     Plotter *plt;
     DATACON data;
 public:
-    Graph(const unsigned int &_ix, const unsigned int &_iy,
-          const unsigned int &_tgrid);
+    Graph(const unsigned int &_ix, const unsigned int &_iy);
     void set_data(const DATACON &_data);
     void plot(const std::string &_filename);
 
 private:
     void find_min();
     void find_max();
+    void find_dimensions();
     void plot_points();
     void plot_grid();
     void plot_ticks();
