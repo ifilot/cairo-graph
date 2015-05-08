@@ -44,6 +44,7 @@ private:
     void find_max();
     void find_dimensions();
     void plot_points();
+    void plot_lines();
     void plot_grid();
     void plot_ticks();
     void plot_graph_border();

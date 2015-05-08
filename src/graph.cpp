@@ -4,7 +4,7 @@ Graph::Graph(const unsigned int &_ix, const unsigned int &_iy) {
     this->ix = _ix;
     this->iy = _iy;
     this->bx = 50;
-    this->by = 40;
+    this->by = 50;
     this->bxr = 20;
     this->byu = 20;
     this->gridlines = 10;
@@ -57,6 +57,7 @@ void Graph::find_dimensions() {
 void Graph::plot(const std::string &_filename) {
     this->plot_grid();
     this->plot_graph_border();
+    this->plot_lines();
     this->plot_points();
     this->plot_ticks();
     this->plt->write(_filename.c_str());
@@ -96,7 +97,7 @@ void Graph::plot_graph_border() {
         this->ix,               // dx
         this->iy,               // dy
         Color(0,0,0),           // color
-        0.5);                   // line width
+        0.25);                   // line width
 }
 
 void Graph::plot_ticks() {
@@ -106,17 +107,48 @@ void Graph::plot_ticks() {
     // vertical axis ticks
     for(float yy = this->ygmin; yy <= this->ygmax; yy += this->int_y) {
         std::string text = float2str2(yy, format);
-        float x = this->bx - text.length() * 7;
+        float x = this->bx - text.length() * 7 - 5;
         float y = this->iy + this->byu - (yy - this->ygmin) * this->dy + 0.3 * fontsize;
         this->plt->type(x, y, fontsize, 0, text);
+
+        this->plt->draw_line(
+            this->bx,
+            this->iy + this->byu - (yy - this->ygmin) * this->dy,
+            this->ix + this->bx,
+            this->iy + this->byu - (yy - this->ygmin) * this->dy,
+            Color(124,124,124),
+            0.5);
+        this->plt->draw_line(
+            this->bx-5,
+            this->iy + this->byu - (yy - this->ygmin) * this->dy,
+            this->bx,
+            this->iy + this->byu - (yy - this->ygmin) * this->dy,
+            Color(0,0,0),
+            1.0);
     }
 
     // horizontal axis ticks
     for(float xx = this->xgmin; xx <= this->xgmax; xx += this->int_x) {
         std::string text = float2str2(xx, format);
-        float x = this->bx + (xx - this->xgmin) * this->dx - 5;
-        float y = this->iy + this->byu + 15 - 0.25 * text.length() * fontsize;
+        float x = this->bx + (xx - this->xgmin) * this->dx - 3;
+        float y = this->iy + this->byu + 20 - 0.25 * text.length() * fontsize;
         this->plt->type(x, y, fontsize, 90, text);
+
+        this->plt->draw_line(
+            this->bx + (xx - this->xgmin) * this->dx,
+            this->byu,
+            this->bx + (xx - this->xgmin) * this->dx,
+            this->byu + this->iy,
+            Color(124,124,124),
+            0.5);
+
+        this->plt->draw_line(
+            this->bx + (xx - this->xgmin) * this->dx,
+            this->byu + this->iy,
+            this->bx + (xx - this->xgmin) * this->dx,
+            this->byu + this->iy + 5,
+            Color(0,0,0),
+            1.0);
     }
 }
 
@@ -127,5 +159,17 @@ void Graph::plot_points() {
             this->iy + this->byu - (it->second - this->ygmin) * this->dy,    // cy
             2,                                                  // radius
             Color(0,0,0));                                      //color
+    }
+}
+
+void Graph::plot_lines() {
+    for(DATACON::iterator it = data.begin(); it != data.end() - 1; ++it) {
+        float x1 = this->bx + (it->first - this->xgmin) * this->dx;
+        float y1 = this->iy + this->byu - (it->second - this->ygmin) * this->dy;
+
+        float x2 = this->bx + ((it+1)->first - this->xgmin) * this->dx;
+        float y2 = this->iy + this->byu - ((it+1)->second - this->ygmin) * this->dy;
+
+        this->plt->draw_line(x1, y1, x2, y2, Color(0,0,0), 1.0);
     }
 }
