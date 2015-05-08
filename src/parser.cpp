@@ -4,10 +4,17 @@ Parser::Parser() {
     this->data = new DATACON;
 }
 
-void Parser::read(std::string filename) {
+void Parser::get_dataset_from_file(std::string filename) {
+    std::string input, line;
+
     std::ifstream infile(filename.c_str());
+    while (std::getline(infile, line)) {
+        input.append(line).append("\n");
+    }
+    this->get_dataset_from_string(input);
+}
 
-
+void Parser::get_dataset_from_string(std::string input) {
     const char *pattern = "^\\s*([0-9.eE-]+)\\s+([0-9.eE-]+).*$";
     const char *pcre_error_string;
     const char *pcre_substring_match_string;
@@ -18,8 +25,10 @@ void Parser::read(std::string filename) {
     pcre* regex_compiled = pcre_compile(pattern, 0, &pcre_error_string, &pcre_error_offset, NULL);
     pcre_extra* pcre_extra_p = pcre_study(regex_compiled, 0, &pcre_error_string);
 
+    std::stringstream stream;
+    stream << input;
     std::string line;
-    while (std::getline(infile, line)) {
+    while (std::getline(stream, line)) {
 
         if(line.empty()) {
             break;

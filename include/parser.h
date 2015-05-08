@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <pcrecpp.h>
 
 typedef std::vector<std::pair<double, double> > DATACON;
@@ -15,7 +16,8 @@ private:
 DATACON *data;
 public:
     Parser();
-    void read(std::string filename);
+    void get_dataset_from_file(std::string filename);
+    void get_dataset_from_string(std::string input);
     const DATACON* get_dataset() const;
 private:
 };
