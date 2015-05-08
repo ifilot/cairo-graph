@@ -27,38 +27,56 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <tclap/CmdLine.h>
 #include "graph.h"
 #include "parser.h"
 
-void read_from_pipe (int file) {
-    FILE *stream;
-    int c;
-    stream = fdopen(file, "r");
-    while ((c = fgetc(stream)) != EOF) {
-        putchar (c);
-    }
-    fclose(stream);
-}
-
 int main(int argc, char *argv[]) {
-    std::string input, output_file;
-    Parser parser;
 
-    if(argc == 2) { // read from cin
-        std::string line;
-        while(std::getline(std::cin, line)) {
-            input.append(line).append("\n");
+    try {
+        TCLAP::CmdLine cmd("Creates a tiny graph from a datafile.", ' ', "1.0");
+
+        //**************************************
+        // declare values to be parsed
+        //**************************************
+        TCLAP::ValueArg<std::string> arg_output_filename("o","filename","Filename to print to",true,"test.png","filename");
+        cmd.add(arg_output_filename);
+        TCLAP::ValueArg<std::string> arg_input_filename("i","input","Input file (i.e. CHGCAR)",false,"__NONE__","filename");
+        cmd.add(arg_input_filename);
+
+        cmd.parse(argc, argv);
+
+        //**************************************
+        // parsing values
+        //**************************************
+        std::string input_filename = arg_input_filename.getValue();
+        std::string output_filename = arg_output_filename.getValue();
+
+        //**************************************
+        // start running the program
+        //**************************************
+
+        // construct parser object
+        Parser parser;
+
+        if(input_filename == "__NONE__") {
+            std::string line, input;
+            while(std::getline(std::cin, line)) {
+                input.append(line).append("\n");
+            }
+            parser.get_dataset_from_string(input);
+        } else {
+            parser.get_dataset_from_file(input_filename);
         }
-        parser.get_dataset_from_string(input);
-        output_file = argv[1];
-    } else { // read from file
-        parser.get_dataset_from_file(argv[1]);
-        output_file = argv[2];
+
+        Graph graph(100, 100);
+        graph.set_data(parser.get_dataset());
+        graph.plot(output_filename);
+
+        return 0;
+    } catch (TCLAP::ArgException &e) {
+        std::cerr << "error: " << e.error() <<
+                     " for arg " << e.argId() << std::endl;
+        return -1;
     }
-
-    Graph graph(100, 100);
-    graph.set_data(parser.get_dataset());
-    graph.plot(output_file);
-
-    return 0;
 }

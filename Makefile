@@ -62,7 +62,8 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) -c -o $@ $< $(CFLAGS)
 
 test: $(BINDIR)/$(EXEC)
-	$(BINDIR)/$(EXEC)
+	$(BINDIR)/$(EXEC) -i test/dataset01.dat -o test_m1.png
+	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m2.png
 
 doc: tex/manual.tex
 	pdflatex tex/manual.tex
