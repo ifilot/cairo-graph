@@ -25,7 +25,7 @@ EXEC = mg
 CXX = g++                                # use the GNU C++ compiler
 OPTS = -O3 -Wall -g -Wno-write-strings   # use some optimization, report all warnings and enable debugging
 CFLAGS = $(OPTS)                         # add compile flags
-LDFLAGS = -lcairo -lpcrecpp              # specify link flags here
+LDFLAGS =  -lcairo -lpcrecpp             # specify link flags here
 
 # set a list of directories
 INCDIR =./include
@@ -43,6 +43,15 @@ SOURCES = minigraph.cpp plotter.cpp graph.cpp lexical_casts.cpp parser.cpp
 # and adding a path
 _OBJ = $(SOURCES:.cpp=.o)
 OBJ = $(patsubst %,$(OBJDIR)/%,$(_OBJ))
+
+#
+# Add additional directives for OSX
+#
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+CFLAGS += -I/opt/local/include
+LDFLAGS += -L/opt/local/lib -lpcre
+endif
 
 all: $(BINDIR)/$(EXEC)
 
