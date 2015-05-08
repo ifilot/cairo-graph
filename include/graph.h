@@ -1,3 +1,6 @@
+#ifndef _GRAPH_H
+#define _GRAPH_H
+
 #include <vector>
 #include <utility>
 #include <string>
@@ -33,10 +36,10 @@ private:
     double int_y;
     unsigned int gridlines;
     Plotter *plt;
-    DATACON data;
+    const DATACON *data;
 public:
     Graph(const unsigned int &_ix, const unsigned int &_iy);
-    void set_data(const DATACON &_data);
+    void set_data(const DATACON *_data);
     void plot(const std::string &_filename);
 
 private:
@@ -49,3 +52,5 @@ private:
     void plot_ticks();
     void plot_graph_border();
 };
+
+#endif //_GRAPH_H

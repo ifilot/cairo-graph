@@ -12,7 +12,7 @@ Graph::Graph(const unsigned int &_ix, const unsigned int &_iy) {
                             this->iy + this->by + this->byu);
 }
 
-void Graph::set_data(const DATACON &_data) {
+void Graph::set_data(const DATACON *_data) {
     this->data = _data;
     this->find_min();
     this->find_max();
@@ -20,14 +20,14 @@ void Graph::set_data(const DATACON &_data) {
 }
 
 void Graph::find_min() {
-    for(DATACON::iterator it = data.begin(); it != data.end(); ++it) {
+    for(DATACON::const_iterator it = data->begin(); it != data->end(); ++it) {
         this->xmin = std::min(it->first, this->xmin);
         this->ymin = std::min(it->second, this->ymin);
     }
 }
 
 void Graph::find_max() {
-    for(DATACON::iterator it = data.begin(); it != data.end(); ++it) {
+    for(DATACON::const_iterator it = data->begin(); it != data->end(); ++it) {
         this->xmax = std::max(it->first, this->xmax);
         this->ymax = std::max(it->second, this->ymax);
     }
@@ -153,7 +153,7 @@ void Graph::plot_ticks() {
 }
 
 void Graph::plot_points() {
-    for(DATACON::iterator it = data.begin(); it != data.end(); ++it) {
+    for(DATACON::const_iterator it = data->begin(); it != data->end(); ++it) {
         this->plt->draw_filled_circle(
             this->bx + (it->first - this->xgmin) * this->dx,     // cx
             this->iy + this->byu - (it->second - this->ygmin) * this->dy,    // cy
@@ -163,7 +163,7 @@ void Graph::plot_points() {
 }
 
 void Graph::plot_lines() {
-    for(DATACON::iterator it = data.begin(); it != data.end() - 1; ++it) {
+    for(DATACON::const_iterator it = data->begin(); it != data->end() - 1; ++it) {
         float x1 = this->bx + (it->first - this->xgmin) * this->dx;
         float y1 = this->iy + this->byu - (it->second - this->ygmin) * this->dy;
 
