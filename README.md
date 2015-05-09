@@ -2,11 +2,14 @@
 
 ## Introduction
 Minigraph is a tiny tool for converting raw XY data to miniature graphs. 
-These graphs have been optimised to be small.
+These graphs have been optimised to be small. A typical graph looks like:
+![Example graph](https://github.com/ifilot/minigraph/blob/master/tex/img/example_graph.png "Example graph")
+
 
 ## Installation
 Minigraph depends on a couple of libraries, which are normally directly available
 by your favorite package manager.
+
 
 * Cairo
 * PCRECPP
