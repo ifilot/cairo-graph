@@ -48,6 +48,11 @@ Switch        | Behaviour
 -l            | Plot lines
 -p            | Plot points
 
+## Todo
+- [ ] Enable configuration of colors
+- [ ] Add bargraphs
+- [ ] Add splines
+
 ## License
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
