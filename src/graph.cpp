@@ -139,6 +139,9 @@ void Graph::plot(const std::string &_filename) {
     this->plot_grid();
 
     // functions depending on properties
+    if(this->properties.test(GRAPH_HAS_BARS)) {
+        this->plot_bars();
+    }
     if(this->properties.test(GRAPH_HAS_LINES)) {
         this->plot_lines();
     }
@@ -263,6 +266,41 @@ void Graph::plot_lines() {
         this->plot_line_internal_coordinates(it->first, it->second,
                                              (it+1)->first, (it+1)->second,
                                               Color(0,0,0), 1.0);
+    }
+}
+
+/*
+ * Plot the datapoints as small bars
+ */
+void Graph::plot_bars() {
+    const float relative_bar_width = 0.95;
+    const float bar_width = (float)this->ix / (float)(this->data->size() - 1) * relative_bar_width;
+    float xstart, bdx, diff;
+    for(DATACON::const_iterator it = data->begin(); it != data->end(); ++it) {
+
+        xstart = this->bx + (it->first - this->xgmin) * this->dx - bar_width / 2.0;
+        bdx = bar_width;
+
+        // clip the bar width if part of the bar ends up outside the drawing area
+        // ... when it is too far to the left
+        if(xstart < this->bx) {
+            diff = xstart - this->bx;
+            xstart = this->bx;
+            bdx += diff;
+        }
+
+        // ... and when it is too far to the right
+        if(xstart+bdx > this->bx + this->ix) {
+            diff = this->bx + this->ix - xstart - bdx;
+            bdx += diff;
+        }
+
+        this->plt->draw_filled_rectangle(
+            xstart,
+            this->iy + this->byu - (it->second - this->ygmin) * this->dy,
+            bdx,
+            (it->second - this->ygmin) * this->dy,
+            Color(100,100,100));
     }
 }
 

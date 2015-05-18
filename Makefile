@@ -64,6 +64,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 test: $(BINDIR)/$(EXEC)
 	$(BINDIR)/$(EXEC) -i test/dataset01.dat -o test_m1.png -l -p
 	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m2.png -l -p
+	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m3.png -l -b
 
 doc: tex/manual.tex
 	pdflatex tex/manual.tex

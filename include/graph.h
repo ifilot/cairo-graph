@@ -38,6 +38,7 @@ typedef std::vector<std::pair<double, double> > DATACON;
 // define properties
 #define GRAPH_HAS_LINES   0 << 0 // 0
 #define GRAPH_HAS_POINTS  1 << 0 // 1
+#define GRAPH_HAS_BARS    1 << 1 // 2
 
 class Graph {
 private:
@@ -65,7 +66,7 @@ private:
     unsigned int gridlines;
     Plotter *plt;
     const DATACON *data;
-    std::bitset<2> properties;
+    std::bitset<5> properties;
 
 public:
     Graph(const unsigned int &_ix, const unsigned int &_iy);
@@ -77,8 +78,12 @@ private:
     void find_min();
     void find_max();
     void find_dimensions();
+
+    // different plot styles
     void plot_points();
     void plot_lines();
+    void plot_bars();
+
     void plot_grid();
     void plot_ticks();
     void plot_graph_border();

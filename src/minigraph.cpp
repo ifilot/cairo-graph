@@ -54,6 +54,9 @@ int main(int argc, char *argv[]) {
         // whether to plot points (default false)
         TCLAP::SwitchArg arg_has_points("p","points","plot points in the graph", cmd, false);
 
+        // whether to plot bars (default false)
+        TCLAP::SwitchArg arg_has_bars("b","bars","plot bars in the graph", cmd, false);
+
         cmd.parse(argc, argv);
 
         //**************************************
@@ -63,6 +66,7 @@ int main(int argc, char *argv[]) {
         std::string output_filename = arg_output_filename.getValue();
         bool has_lines = arg_has_lines.getValue();
         bool has_points = arg_has_points.getValue();
+        bool has_bars = arg_has_bars.getValue();
 
         //**************************************
         // start running the program
@@ -90,6 +94,7 @@ int main(int argc, char *argv[]) {
         }
         graph.set_property(GRAPH_HAS_LINES, has_lines);
         graph.set_property(GRAPH_HAS_POINTS, has_points);
+        graph.set_property(GRAPH_HAS_BARS, has_bars);
 
         // read data and create graph
         graph.set_data(parser.get_dataset());
