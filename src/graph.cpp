@@ -67,6 +67,11 @@ void Graph::find_min() {
         this->xmin = std::min(it->first, this->xmin);
         this->ymin = std::min(it->second, this->ymin);
     }
+
+    // also add minimum of colorlines
+    for(unsigned int i=0; i<this->colorline_values.size(); i++) {
+        this->ymin = std::min(this->colorline_values[i], this->ymin);
+    }
 }
 
 /*
@@ -76,6 +81,11 @@ void Graph::find_max() {
     for(DATACON::const_iterator it = data->begin(); it != data->end(); ++it) {
         this->xmax = std::max(it->first, this->xmax);
         this->ymax = std::max(it->second, this->ymax);
+    }
+
+    // also add maximum of colorlines
+    for(unsigned int i=0; i<this->colorline_values.size(); i++) {
+        this->ymax = std::max(this->colorline_values[i], this->ymax);
     }
 }
 

@@ -70,7 +70,7 @@ private:
     std::string title;
     float fontsize;
     std::vector<std::string> colorlines;
-    std::vector<float> colorline_values;
+    std::vector<double> colorline_values;
     std::vector<Color> colorline_colors;
 
 public:
