@@ -26,10 +26,14 @@
 #include <string>
 #include <sstream>
 #include <stdio.h>
+#include <stdlib.h>
 
 std::string int2str(const int &i);
 std::string float2str(const float &i);
 std::string float2str2(const float &i, const char* str);
 std::string double2str(const double &i);
+
+float str2float(const std::string &_str);
+int hex2int(const std::string &_str);
 
 #endif

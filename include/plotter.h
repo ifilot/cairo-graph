@@ -35,6 +35,7 @@ private:
   unsigned int r,g,b;
 public:
   Color(unsigned int _r, unsigned int _g, unsigned int _b);
+  Color(std::string rgb);
   float get_r() const;
   float get_g() const;
   float get_b() const;

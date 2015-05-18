@@ -62,9 +62,10 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) -c -o $@ $< $(CFLAGS)
 
 test: $(BINDIR)/$(EXEC)
-	$(BINDIR)/$(EXEC) -i test/dataset01.dat -o test_m1.png -l -p
-	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m2.png -l -p
-	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m3.png -l -b
+	$(BINDIR)/$(EXEC) -i test/dataset01.dat -o test_m1.png -l -p --title "TEST 1"
+	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m2.png -l -p --title "TEST 2"
+	cat test/dataset01.dat | $(BINDIR)/$(EXEC) -o test_m3.png -l -b --title "TEST 3" \
+	--colorline "10.0#00AA00" --colorline "20.0#AAAA00"  --colorline "30.0#AA0000"
 
 doc: tex/manual.tex
 	pdflatex tex/manual.tex

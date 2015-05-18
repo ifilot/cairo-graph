@@ -36,6 +36,7 @@ Graph::Graph(const unsigned int &_ix, const unsigned int &_iy) {
     this->bxr = 20;     // right margin
     this->byu = 20;     // top margin
     this->gridlines = 4;       // number of (sub-)gridlines
+    this->fontsize = 10;    // default font size
 
     // create plotter object
     this->plt = new Plotter(this->ix + this->bx + this->bxr,
@@ -138,18 +139,26 @@ void Graph::plot(const std::string &_filename) {
     // background and grid
     this->plot_grid();
 
-    // functions depending on properties
+    // plot dataset as bars (if set)
     if(this->properties.test(GRAPH_HAS_BARS)) {
         this->plot_bars();
     }
+
+    // plot colorlines (if set)
+    this->plot_colorlines();
+
+    // plot regular lines (if set)
     if(this->properties.test(GRAPH_HAS_LINES)) {
         this->plot_lines();
     }
+
+    // plot points (if set)
     if(this->properties.test(GRAPH_HAS_POINTS)) {
         this->plot_points();
     }
 
     // other stuff
+    this->plot_title();
     this->plot_ticks();
     this->plot_graph_border();
 
@@ -191,18 +200,33 @@ void Graph::plot_graph_border() {
 }
 
 /*
+ * Plot colored lines according to colorlines settings
+ */
+void Graph::plot_colorlines() {
+    for(unsigned int i=0; i<this->colorline_values.size(); i++) {
+        float y = this->iy + this->byu - (this->colorline_values[i] - this->ygmin) * this->dy;
+        this->plt->draw_line(
+            this->bx,
+            y,
+            this->ix + this->bx,
+            y,
+            this->colorline_colors[i],
+            0.5);
+    }
+}
+
+/*
  * Plot the ticks and ticklines
  */
 void Graph::plot_ticks() {
-    const float fontsize = 10;
     const char* format = "%0.2f";
 
     // vertical axis ticks
     for(float yy = this->ygmin; yy <= this->ygmax; yy += this->int_y) {
         std::string text = float2str2(yy, format);
         float x = this->bx - text.length() * 7 - 5;
-        float y = this->iy + this->byu - (yy - this->ygmin) * this->dy + 0.3 * fontsize;
-        this->plt->type(x, y, fontsize, 0, text);
+        float y = this->iy + this->byu - (yy - this->ygmin) * this->dy + 0.3 * this->fontsize;
+        this->plt->type(x, y, this->fontsize, 0, text);
 
         this->plt->draw_line(
             this->bx,
@@ -224,8 +248,8 @@ void Graph::plot_ticks() {
     for(float xx = this->xgmin; xx <= this->xgmax; xx += this->int_x) {
         std::string text = float2str2(xx, format);
         float x = this->bx + (xx - this->xgmin) * this->dx - 3;
-        float y = this->iy + this->byu + 20 - 0.25 * text.length() * fontsize;
-        this->plt->type(x, y, fontsize, 90, text);
+        float y = this->iy + this->byu + 20 - 0.25 * text.length() * this->fontsize;
+        this->plt->type(x, y, this->fontsize, 90, text);
 
         this->plt->draw_line(
             this->bx + (xx - this->xgmin) * this->dx,
@@ -243,6 +267,21 @@ void Graph::plot_ticks() {
             Color(0,0,0),
             1.0);
     }
+}
+
+/*
+ * Plot a title above the graph
+ */
+void Graph::plot_title() {
+    // do not do anything if there is no title
+    if(this->title.length() == 0) {
+        return;
+    }
+    this->plt->type(this->bx,             // x
+                    this->fontsize * 1.5, // y
+                    this->fontsize * 1.0, // size of font
+                    0, //rotation
+                    this->title);
 }
 
 /*
@@ -328,4 +367,25 @@ void Graph::plot_line_internal_coordinates(float _x1, float _y1, float _x2, floa
  */
 void Graph::set_property(unsigned int property, bool value) {
     this->properties[property] = value;
+}
+
+void Graph::set_title(const std::string &_title) {
+    this->title = _title;
+}
+
+void Graph::set_colorlines(const std::vector<std::string> &_colorlines) {
+    this->colorlines = _colorlines;
+    std::string delimiter = "#";
+    for(std::vector<std::string>::const_iterator it = this->colorlines.begin();
+        it != this->colorlines.end(); ++it) {
+
+        std::string value = it->substr(0, it->find(delimiter));
+        std::string rgb = it->substr(it->find(delimiter) + 1);
+
+        this->colorline_values.push_back( str2float(value) );
+        Color clr(hex2int(rgb.substr(0,2)),
+                  hex2int(rgb.substr(2,2)),
+                  hex2int(rgb.substr(4,2)) );
+        this->colorline_colors.push_back(clr);
+    }
 }

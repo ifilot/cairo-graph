@@ -48,6 +48,14 @@ int main(int argc, char *argv[]) {
         TCLAP::ValueArg<std::string> arg_output_filename("o","filename","Filename to print to",true,"test.png","filename");
         cmd.add(arg_output_filename);
 
+        // graph title
+        TCLAP::ValueArg<std::string> arg_title("t","title","Title for the graph",false,"","title");
+        cmd.add(arg_title);
+
+        // add one or more lines at designated y-value and using a specified color
+        TCLAP::MultiArg<std::string> arg_colorstrings("c", "colorline", "Draw colored line", false, "colorstring");
+        cmd.add(arg_colorstrings);
+
         // whether to plot lines (default true)
         TCLAP::SwitchArg arg_has_lines("l","lines","plot lines in the graph", cmd, false);
 
@@ -64,6 +72,10 @@ int main(int argc, char *argv[]) {
         //**************************************
         std::string input_filename = arg_input_filename.getValue();
         std::string output_filename = arg_output_filename.getValue();
+        std::vector<std::string> colorstrings = arg_colorstrings.getValue();
+
+        // plot directives
+        std::string title = arg_title.getValue();
         bool has_lines = arg_has_lines.getValue();
         bool has_points = arg_has_points.getValue();
         bool has_bars = arg_has_bars.getValue();
@@ -92,6 +104,8 @@ int main(int argc, char *argv[]) {
         if(!has_lines && !has_points) { // bare minimum is showing lines
             has_lines = true;
         }
+        graph.set_title(title);
+        graph.set_colorlines(colorstrings);
         graph.set_property(GRAPH_HAS_LINES, has_lines);
         graph.set_property(GRAPH_HAS_POINTS, has_points);
         graph.set_property(GRAPH_HAS_BARS, has_bars);

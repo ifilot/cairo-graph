@@ -67,12 +67,19 @@ private:
     Plotter *plt;
     const DATACON *data;
     std::bitset<5> properties;
+    std::string title;
+    float fontsize;
+    std::vector<std::string> colorlines;
+    std::vector<float> colorline_values;
+    std::vector<Color> colorline_colors;
 
 public:
     Graph(const unsigned int &_ix, const unsigned int &_iy);
     void set_data(const DATACON *_data);
     void plot(const std::string &_filename);
     void set_property(unsigned int property, bool value);
+    void set_title(const std::string &_title);
+    void set_colorlines(const std::vector<std::string> &_colorlines);
 
 private:
     void find_min();
@@ -84,9 +91,11 @@ private:
     void plot_lines();
     void plot_bars();
 
+    void plot_title();
     void plot_grid();
     void plot_ticks();
     void plot_graph_border();
+    void plot_colorlines();
 
     float internal_to_image_x(float _x);
     float internal_to_image_y(float _y);

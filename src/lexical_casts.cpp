@@ -45,3 +45,16 @@ std::string double2str(const double &i) {
   ss << i;
   return std::string(ss.str());
 }
+
+float str2float(const std::string &_str) {
+    float result = atof(_str.c_str());
+    return result;
+}
+
+int hex2int(const std::string &_str) {
+    unsigned int x;
+    std::stringstream ss;
+    ss << std::hex << _str;
+    ss >> x;
+    return x;
+}

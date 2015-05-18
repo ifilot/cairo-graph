@@ -120,8 +120,6 @@ void Plotter::write(const char* filename) {
  *                                                                        *
  **************************************************************************/
 
-#include "color_scheme.h"
-
 /**
  * Constructor
  *
