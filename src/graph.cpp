@@ -274,7 +274,8 @@ void Graph::plot_lines() {
  */
 void Graph::plot_bars() {
     const float relative_bar_width = 0.95;
-    const float bar_width = (float)this->ix / (float)(this->data->size() - 1) * relative_bar_width;
+    const float bar_width = ((this->xmax - this->xmin) * this->dx) / (float)(this->data->size() - 1) * relative_bar_width;
+
     float xstart, bdx, diff;
     for(DATACON::const_iterator it = data->begin(); it != data->end(); ++it) {
 
